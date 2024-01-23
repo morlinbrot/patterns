@@ -23,7 +23,7 @@ section which considers six patterns to be the simplest and most common ones.
 
 ### Simple & Common Patterns
 
-- Abstract Factory (creational)
+- [Abstract Factory (creational)](#abstract-factory)
 - Factory Method (creational)
 - Adapter (structural)
 - Composite (structural)
@@ -66,6 +66,38 @@ section which considers six patterns to be the simplest and most common ones.
 
 Provide an interface for creating families of related or dependent objects
 without specifying their concrete classes.
+
+#### Why
+
+Some sort of system should be independent from how its parts are being created,
+composed, and represented. The parts form some sort of theme (family of objects)
+where client code should only be able to use parts that belong together.
+
+#### What
+
+Create an `AbstractFactory` class which defines an interface for creating
+objects ("product objects"). A `ConcreteFactory1` class implements the
+interface, returning concretions of an abstract `AbstractProduct`, specific to
+that concrete's theme/kind (e.g. `ConcreteProduct1`). A `Client` class depends
+only on the abstract interfaces to create and interact with its objects, e.g. it
+is unaware of which theme/kind is in use.
+
+#### Examples
+
+UI toolkit: An `App` class uses methods like `createScrollBar` or `createWindow`
+that are defined by an abstract `WidgetFactory`. `MobileWidetFactory` and
+`WebWidgetFactory` are concretions that return concretions of an abstract
+`ScrollBarWidget` (like `MobileScrollBar` or `WebScrollBar`). The `App` relies
+only on `WidgetFactory`'s interface for creation of widgets and abstract
+`ScrollBarWidget`'s interface for usage of widgets.
+
+#### Discussion
+
+- Con: _Supporting new kinds of products is difficult._ The abstract factory's
+  interface needs to be changed and with it all its implementors. Can be
+  alleviated by using the **Protoype** pattern for concrete factories.
+- Commonly, the concrete factories will use a **FactoryMethod** for each product
+  object.
 
 ### Factory Method
 
