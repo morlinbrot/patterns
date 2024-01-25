@@ -24,7 +24,7 @@ section which considers six patterns to be the simplest and most common ones.
 ### Simple & Common Patterns
 
 - [Abstract Factory (creational)](#abstract-factory)
-- Factory Method (creational)
+- [Factory Method (creational)](#factory-method)
 - Adapter (structural)
 - Composite (structural)
 - [Decorator (structural)](#decorator)
@@ -69,9 +69,9 @@ without specifying their concrete classes.
 
 #### Why
 
-Some sort of system should be independent from how its parts are being created,
-composed, and represented. The parts form some sort of theme (family of objects)
-where client code should only be able to use parts that belong together.
+A system should be independent from how its parts are being created, composed,
+and represented. The parts form some sort of theme (family of objects) where
+client code should only be able to use parts that belong together.
 
 #### What
 
@@ -86,9 +86,9 @@ is unaware of which theme/kind is in use.
 
 UI toolkit: An `App` class uses methods like `createScrollBar` or `createWindow`
 that are defined by an abstract `WidgetFactory`. `MobileWidetFactory` and
-`WebWidgetFactory` are concretions that return concretions of an abstract
-`ScrollBarWidget` (like `MobileScrollBar` or `WebScrollBar`). The `App` relies
-only on `WidgetFactory`'s interface for creation of widgets and abstract
+`WebWidgetFactory` are concretions that return of an abstract `ScrollBarWidget`
+(like `MobileScrollBar` or `WebScrollBar`). The `App` relies only on
+`WidgetFactory`'s interface for creation of widgets and abstract
 `ScrollBarWidget`'s interface for usage of widgets.
 
 #### Discussion
@@ -104,6 +104,41 @@ only on `WidgetFactory`'s interface for creation of widgets and abstract
 Define an interface for creating an object, but let subclasses decide which
 class to instantiate. Factory Method lets a class defer instantiation to
 subclasses.
+
+#### Why
+
+A) A creator class define how to create objects but shouldn't know how to create
+them itself.
+
+B) Provide users of a library or framework with a way of extending its
+functionality.
+
+C) Need to manage large, resource-intensive objects like db connections. Use a
+factory method to centrally manage connections.
+
+#### What
+
+Create a `Creator` class defining a `createProduct` method (it could optionally
+provide a default implementation). Subclass the creator with `ConcreteCreators`,
+implementing the interface and creating a `ConcreteProduct`. All
+`ConcreteProducts` need to implement the same interface defined by
+`createProduct`.
+
+#### Examples
+
+Logistics app: A `LogisticsApp` uses a `createTransportation` with a return type
+of `Transportation` to creat objects that can make a delivery. `RoadLogistics`
+and `SeaLogistics` subclass it and return `Truck` and `Ship` instances,
+respectively. Both implement the `Transportation` interface with a `deliver`
+method.
+
+#### Discussion
+
+- Use only if the creator is subclassed anyway, otherwise the pattern creates
+  unnecessary overhead by forcing clients to subclass the creator just to
+  instantiate concrete products.
+- The pattern will easily evolve into the **Abstract Factory** pattern - _what
+  are the exact differences_?
 
 ## Structural
 
@@ -282,8 +317,8 @@ Word processor: Limited number of `Letter` objects store only a character code.
 Any number of `Glyph` objects store state like position, font style, etc.
 
 Multiplayer shooter: Limited number of `Particle` objects (bullet, missile,
-shrapnel) store a color and a sprite (lots of memory). Any number of
-`MovingParticle` objects store information on coords, vector, speed, etc.
+shrapnel) store a color and a sprite (lots of memory). A large number of
+`MovingParticle` objects only store information on coords, vector, speed, etc.
 
 #### Discussion
 
