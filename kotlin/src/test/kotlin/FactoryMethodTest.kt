@@ -21,4 +21,14 @@ class FactoryMethodTest {
         val delivery = transporter.deliver(69)
         assertEquals("Delivering 69 using a ship.", delivery)
     }
+
+    @Test fun mazeGame() {
+        // `createMaze` should be a static method but Kotlin doesn't have a straight-forward way of defining one.
+        // `createMaze` acts as a constructor for all the different types of maze games. Maze game construction is
+        // always handled by the base class but the overridden factory methods will provide different elements to use.
+        val normalMazeGame = MazeGame().createMaze()
+        val bombedMazeGame = BombedMazeGame().createMaze() // Will have bombed walls.
+        val enchantedMazeGame = EnchantedMazeGame().createMaze() // Will have enchanted doors.
+    }
+
 }

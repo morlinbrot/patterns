@@ -137,8 +137,10 @@ method.
 - Use only if the creator is subclassed anyway, otherwise the pattern creates
   unnecessary overhead by forcing clients to subclass the creator just to
   instantiate concrete products.
-- The pattern will easily evolve into the **Abstract Factory** pattern - _what
-  are the exact differences_?
+- The pattern can easily evolve into the **Abstract Factory** pattern,
+  difference being: Abstract Factory provides access to many different products
+  which share a theme. _Abstract Factories are often implemented using Factory
+  Methods._
 
 ## Structural
 
