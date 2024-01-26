@@ -21,32 +21,32 @@ section which considers six patterns to be the simplest and most common ones.
 
 ## Table of Contents
 
-### Simple & Common Patterns
+### [Simple & Common Patterns](#simple--common-patterns-1)
 
-- [Abstract Factory (creational)](#abstract-factory)
-- [Factory Method (creational)](#factory-method)
-- Adapter (structural)
-- Composite (structural)
-- [Decorator (structural)](#decorator)
-- Observer (behavioral)
-- Strategy (behavioral)
+- [Abstract Factory](#abstract-factory) [(creational)](#creational-1)
+- [Factory Method](#factory-method) [(creational)](#creational-1)
+- Adapter [(structural)](#structural-1)
+- Composite [(structural)](#structural-1)
+- [Decorator](#decorator) [(structural)](#structural-1)
+- Observer [(behavioral)](#behavioral-1)
+- Strategy [(behavioral)](#behavioral-1)
 
-### All Patterns
+### [All Patterns](#all-patterns-1)
 
-#### Creational
+#### [Creational](#creational-2)
 
 - Builder
-- Prototype
+- [Prototype](#prototype)
 - [Singleton](#singleton)
 
-#### Structural
+#### [Structural](#structural-2)
 
 - [Bridge](#bridge)
 - Facade
 - [Flyweight](#flyweight)
 - Proxy
 
-#### Behavioral
+#### [Behavioral](#behavioral-2)
 
 - Chain of Responsibility
 - Command
@@ -66,6 +66,8 @@ section which considers six patterns to be the simplest and most common ones.
 
 Provide an interface for creating families of related or dependent objects
 without specifying their concrete classes.
+
+[Kotlin](kotlin/src/main/kotlin/AbstractFactory.kt)
 
 #### Why
 
@@ -96,14 +98,17 @@ that are defined by an abstract `WidgetFactory`. `MobileWidetFactory` and
 - Con: _Supporting new kinds of products is difficult._ The abstract factory's
   interface needs to be changed and with it all its implementors. Can be
   alleviated by using the **Protoype** pattern for concrete factories.
-- Commonly, the concrete factories will use a **FactoryMethod** for each product
-  object.
+- Commonly, a factory will just be a collection of **Factory Methods** and is
+  also not abstract itself, e.g. providing default implementations where only
+  specific methods can be overriden by further concrete factories.
 
 ### Factory Method
 
 Define an interface for creating an object, but let subclasses decide which
 class to instantiate. Factory Method lets a class defer instantiation to
 subclasses.
+
+[Kotlin](kotlin/src/main/kotlin/FactoryMethod.kt)
 
 #### Why
 
@@ -216,6 +221,36 @@ that use it.
 ## All Patterns
 
 ## Creational
+
+### Prototype
+
+Specify the kinds of objects to create using a prototypical instance, and create
+new objects by copying this prototype.
+
+[Kotlin](kotlin/src/main/kotlin/Prototype.kt)
+
+#### Why
+
+- You want to clone objects without knowing/being dependent on their classes.
+- A program needs to be able to receive objects "from the outside" and/or at
+  runtime without knowing their classes.
+- Move the (arbitrarily complex) logic of (deep) cloning objects away from the
+  client into the objects themselves.
+
+#### What
+
+Define a `Prototype` interface which most oftenly consist of only one method,
+`clone`. Implementations of `clone` have access to private fields and methods
+and take care of producing an identical copy, including any state the object may
+hold. Optionally, define an `initialize` method on the interface that can be
+used to reset objects to an "empty" state.
+
+#### Examples
+
+#### Discussion
+
+- Reduced subclassing compared to the **Factory Method** which often produces a
+  hierarchy of `Creator` classes that parallel the product class hierarchy.
 
 ### Singleton
 
