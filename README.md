@@ -25,7 +25,7 @@ section which considers six patterns to be the simplest and most common ones.
 
 - [Abstract Factory](#abstract-factory) [(creational)](#creational-1)
 - [Factory Method](#factory-method) [(creational)](#creational-1)
-- Adapter [(structural)](#structural-1)
+- [Adapter](#adapter) [(structural)](#structural-1)
 - Composite [(structural)](#structural-1)
 - [Decorator](#decorator) [(structural)](#structural-1)
 - Observer [(behavioral)](#behavioral-1)
@@ -154,6 +154,44 @@ method.
 Convert the interface of a class into another interface clients expect. Adapter
 lets classes work together that couldn’t otherwise because of incompatible
 interfaces.
+
+[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
+
+#### Why
+
+You want to use an existing class but its interface doesn't match what your
+existing system's interfaces or you want to create a reusable class that
+cooperates with unrelated or unforeseen classes (e.g. generic TreeView)
+
+#### What
+
+There are class and object versions of the pattern. Either
+
+1. define a class that inherits the internal interface and proxies the external
+   class' implementation, or
+2. compose an instance of the external object with an internal one that
+   implements the internal interface
+
+#### Examples
+
+A `TreeView` target class defines a narrow interface consisting of `getChildren`
+and `createNode` methods. A `DirectoryTreeView` adapter implements the
+interface, by specialising it to be compatible with the interface of
+`FileSystemEntity` objects. Other `AdaptedTreeView` may adapt the interface to
+different `AdapteeEntity` objects. A `Client` class can freely construct and
+work with trees of any kind without knowing their type.
+
+#### Discussion
+
+- Con class: must commit to a concrete `Adaptee` class, e.g. won't work for
+  adapting a class _and all its subclasses_.
+- Pro class: no additional pointer indirection.
+- Pro object: lets `Adapter` work with many `Adaptee`s and can add functionality
+  to all `Adaptee`s at once.
+- Con object: Harder to override `Adaptee` behaviour, needs to create `Adaptee`
+  subclasses.
+- Similar to **Bridge** but different in intent and usage: Use **Bridge** when
+  designing a system, **Adapter** when adapting already existing systems.
 
 ### Composite
 
