@@ -26,7 +26,7 @@ section which considers six patterns to be the simplest and most common ones.
 - [Abstract Factory](#abstract-factory) [(creational)](#creational-1)
 - [Factory Method](#factory-method) [(creational)](#creational-1)
 - [Adapter](#adapter) [(structural)](#structural-1)
-- Composite [(structural)](#structural-1)
+- [Composite](#composite) [(structural)](#structural-1)
 - [Decorator](#decorator) [(structural)](#structural-1)
 - Observer [(behavioral)](#behavioral-1)
 - Strategy [(behavioral)](#behavioral-1)
@@ -198,6 +198,38 @@ work with trees of any kind without knowing their type.
 Compose objects into tree structures to represent part-whole hierarchies.
 Composite lets clients treat individual objects and compositions of objects
 uniformly.
+
+_"Lets you compose objects into tree structures and then work with these
+structures as if they were individual objects."_
+
+- https://refactoring.guru/design-patterns/composite
+
+#### Why
+
+You need to be able to treat all objects uniformely, no matter if they are
+composed of multiple objects or not.
+
+[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
+
+#### What
+
+Define an interface `IComponent` with operations like a `getPrice` method that
+should be shared by both composite and primitive objects. Create `Composite` and
+`Primitive` base classes which implement the interface. `Composite` will
+additionally define methods to operate on the tree structure (whether to include
+these in the `IComponent` interface or not is up for discussion).
+
+Create implementors of the base classes like `Product`, implementing
+`Primitive`, and `Box`, implementing `Composite`. Compute the price of boxes
+and/or products without knowing exactly what they are.
+
+#### Examples
+
+See above and example code.
+
+#### Discussion
+
+- Makes sense only if the core model can be represented as a tree.
 
 ### Decorator
 
