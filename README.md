@@ -28,7 +28,7 @@ section which considers six patterns to be the simplest and most common ones.
 - [Adapter](#adapter) [(structural)](#structural-1)
 - [Composite](#composite) [(structural)](#structural-1)
 - [Decorator](#decorator) [(structural)](#structural-1)
-- Observer [(behavioral)](#behavioral-1)
+- [Observer](#observer) [(behavioral)](#behavioral-1)
 - Strategy [(behavioral)](#behavioral-1)
 
 ### [All Patterns](#all-patterns-1)
@@ -280,7 +280,58 @@ while the `Application` doesn’t need to know which decorators are in use.
 ### Observer
 
 Define a on-to-many dependency between objects so that when one object changes
-state, all its dependents are notified an updated automatically.
+state, all its dependents are notified and updated automatically.
+
+[Kotlin](kotlin/src/main/kotlin/Observer.kt)
+
+#### Why
+
+- Changes in one object require changes in others, without knowing how many
+  dependent objects there are.
+- When an object should notifiy others about updates without making any
+  assumptions about them, e.g. _to prevent tight coupling_.
+
+#### What
+
+Define a base `Subject` class with `subscribe()`/`unsubscribe()` and `notify()`
+methods. A `ConcreteSubject` implements the interface and provides additional
+`getState()`/`setState()` methods.
+
+A base `Observer` class defines an `update()` method. A `ConcreteObserver` holds
+a reference to a `ConcreteSubject` on which it calls `subscribe()`. After the
+subject calls `update()` on the observer, it in turn calls `getState()` on the
+subject to receive the updated state.
+
+Optional: Introduce specific events (aspects) that observers can subscribe to,
+making the interface more fine-grained and efficient:
+`subscribe(observer: Observer, event: Event)`.
+
+Optional: Introduce a `ChangeManager` object that sits between subjects and
+observers and handles the updating logic. This way, different and more complex
+updating logic can be implemented, e.g. a `DAGChangeManager` which manages a
+directed-acyclic graph of dependencies might prevent redundant updates by
+grouping updates from several subjects into a single call.
+
+#### Examples
+
+See code.
+
+#### Discussion
+
+- There is only _abstract coupling_ between subject and observer. This means
+  that they can _belong to different layers of abstraction of the system without
+  violating the layering principle_.
+- The `notify` operation can be called either by the subject itself or the
+  client code with different tradeoffs. The former will make sure that updates
+  will be broadcast but may incur unnecessary costs for many updates in quick
+  succession, the latter avoids that by making it possible to "batch" update
+  calls but may become more brittle as the responsibility is moved to the
+  client.
+- Find a balance between the extremes push and pull model. In the former, the
+  subject will send detailled information about the change which implies that
+  the subject knows something about its observers. The latter may be inefficient
+  as observers need to figure out _what_ changed without the help of the
+  subject.
 
 ### Strategy
 
