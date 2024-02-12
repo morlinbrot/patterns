@@ -56,7 +56,7 @@ section which considers six patterns to be the simplest and most common ones.
 - Memento
 - State
 - Template Method
-- Visitor
+- [Visitor](#visitor)
 
 ## Simple & Common Patterns
 
@@ -66,8 +66,6 @@ section which considers six patterns to be the simplest and most common ones.
 
 Provide an interface for creating families of related or dependent objects
 without specifying their concrete classes.
-
-[Kotlin](kotlin/src/main/kotlin/AbstractFactory.kt)
 
 #### Why
 
@@ -85,6 +83,8 @@ only on the abstract interfaces to create and interact with its objects, e.g. it
 is unaware of which theme/kind is in use.
 
 #### Examples
+
+[Kotlin](kotlin/src/main/kotlin/AbstractFactory.kt)
 
 UI toolkit: An `App` class uses methods like `createScrollBar` or `createWindow`
 that are defined by an abstract `WidgetFactory`. `MobileWidetFactory` and
@@ -108,8 +108,6 @@ Define an interface for creating an object, but let subclasses decide which
 class to instantiate. Factory Method lets a class defer instantiation to
 subclasses.
 
-[Kotlin](kotlin/src/main/kotlin/FactoryMethod.kt)
-
 #### Why
 
 A) A creator class define how to create objects but shouldn't know how to create
@@ -130,6 +128,8 @@ implementing the interface and creating a `ConcreteProduct`. All
 `createProduct`.
 
 #### Examples
+
+[Kotlin](kotlin/src/main/kotlin/FactoryMethod.kt)
 
 Logistics app: A `LogisticsApp` uses a `createTransportation` with a return type
 of `Transportation` to creat objects that can make a delivery. `RoadLogistics`
@@ -155,8 +155,6 @@ Convert the interface of a class into another interface clients expect. Adapter
 lets classes work together that couldn’t otherwise because of incompatible
 interfaces.
 
-[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
-
 #### Why
 
 You want to use an existing class but its interface doesn't match what your
@@ -173,6 +171,8 @@ There are class and object versions of the pattern. Either
    implements the internal interface
 
 #### Examples
+
+[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
 
 A `TreeView` target class defines a narrow interface consisting of `getChildren`
 and `createNode` methods. A `DirectoryTreeView` adapter implements the
@@ -209,8 +209,6 @@ structures as if they were individual objects."_
 You need to be able to treat all objects uniformely, no matter if they are
 composed of multiple objects or not.
 
-[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
-
 #### What
 
 Define an interface `IComponent` with operations like a `getPrice` method that
@@ -225,7 +223,7 @@ and/or products without knowing exactly what they are.
 
 #### Examples
 
-See above and example code.
+[Kotlin](kotlin/src/main/kotlin/Adapter.kt)
 
 #### Discussion
 
@@ -279,10 +277,8 @@ while the `Application` doesn’t need to know which decorators are in use.
 
 ### Observer
 
-Define a on-to-many dependency between objects so that when one object changes
+Define a one-to-many dependency between objects so that when one object changes
 state, all its dependents are notified and updated automatically.
-
-[Kotlin](kotlin/src/main/kotlin/Observer.kt)
 
 #### Why
 
@@ -314,7 +310,7 @@ grouping updates from several subjects into a single call.
 
 #### Examples
 
-See code.
+[Kotlin](kotlin/src/main/kotlin/Observer.kt)
 
 #### Discussion
 
@@ -348,8 +344,6 @@ that use it.
 Specify the kinds of objects to create using a prototypical instance, and create
 new objects by copying this prototype.
 
-[Kotlin](kotlin/src/main/kotlin/Prototype.kt)
-
 #### Why
 
 - You want to clone objects without knowing/being dependent on their classes.
@@ -368,6 +362,8 @@ used to reset objects to an "empty" state.
 
 #### Examples
 
+[Kotlin](kotlin/src/main/kotlin/Prototype.kt)
+
 #### Discussion
 
 - Reduced subclassing compared to the **Factory Method** which often produces a
@@ -377,8 +373,6 @@ used to reset objects to an "empty" state.
 
 Ensure a class only has one instance, and provide a global point of access to
 it.
-
-[Kotlin](kotlin/src/main/kotlin/Singleton.kt)
 
 #### Why
 
@@ -392,6 +386,8 @@ which uses the private constructor and saves the created instance to a cache. On
 successive call, return the cached instance.
 
 #### Examples
+
+[Kotlin](kotlin/src/main/kotlin/Singleton.kt)
 
 - Global app config
 - Single database connection pool
@@ -418,8 +414,6 @@ https://www.michaelsafyan.com/tech/design/patterns/singleton
 Decouple an abstraction from its implementation so that the two can vary
 independently.
 
-[Kotlin](kotlin/src/main/kotlin/Bridge.kt)
-
 #### Why
 
 A) Avoid permanently binding implementations to abstractions. Both abstractions
@@ -438,6 +432,8 @@ consisting of implementors. A client only knows about the base abstraction which
 bridges to the implementor.
 
 #### Examples
+
+[Kotlin](kotlin/src/main/kotlin/Bridge.kt)
 
 - Window drawing: An abstract hierarchy of `Window`, `IconWindow`,
   `TransientWindow` bridges to an interface `WindowImpl` which is implemented by
@@ -492,6 +488,66 @@ Optional: For convenience, a client may keep all extrinsic state in a separate
 are an interesting application of this pattern.
 
 ## Behavioral
+
+### Visitor
+
+Represent an operation to be performed on the elements of an object structure.
+Visitor lets you define a new operation without changing the classes of the
+elements on which it operates.
+
+#### Why
+
+You want to separate algorithms from the objects on which they operate.
+
+You have a relatively rigid set of diverse elements in the program where a
+number of operations need to be performed on all of them. Instead of adding a
+method for each operation to each element, elements simply receive a visitor and
+call the method representing the operation on it.
+
+Use Visitor if you are _more likely to change functionality than element
+structure of your program_.
+
+#### What
+
+Define two class hierarchies representing the elements of the system and the
+operations to be performed on them. An `Element` base class defines an
+`accept(v: Visitor)` method which all `ConcreteElement`s implement. It accepts
+an object of type `Visitor`.
+
+Define a `Visitor` base class that defines one method for each element that will
+be visited, e.g. `visitElementA`, `visitElementB`, etc. Define a
+`ConcreteVisitor` for each operation to be performed, e.g. `OpAVisitor`,
+`OpBVisitor`.
+
+Implementations of `accept` call `v.visitElementX(this)`, passing themselves as
+reference, and the `ConcreteVistor`'s implementation of `visitElementX` has
+access to the element and implements the algorithm to be executed.
+
+The client code traverses the element hierarchy, calls `accept` with a visitor
+for operation to be performed.
+
+#### Examples
+
+[Kotlin](kotlin/src/main/kotlin/Visitor.kt)
+
+#### Discussion
+
+Visitor is an example of _double-dispatch_. In _single-dispatch_ languages (like
+C++), two criteria determine which operation will fulfill a request: The name of
+the operation and the type of the receiver. _Double-dispatch_ operations (like
+`accept`) depend on the name of the operation and the types of _two_ receivers:
+The visitor's and the element's.
+
+_Key to the Visitor pattern is that it lets us consolidate the operations into a
+visitor and do the binding at runtime_.
+
+- Pro/Con: Adding new functionality is easy but adding new elements is hard.
+- Pro: Visitor groups related behaviour together and separates it from unrelated
+  other behaviour. Simplifies both the algorithms defined in the visitors as
+  well as the classes defining the elements.
+- Pro: Visitor can accumulate state across different objects. Without it, this
+  state would have to be passed as extra arguments to operations or be global
+  variables.
 
 ### Empty
 
