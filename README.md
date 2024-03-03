@@ -53,7 +53,7 @@ section which considers six patterns to be the simplest and most common ones.
 - Interpreter
 - Iterator
 - Mediator
-- Memento
+- [Memento](#memento)
 - State
 - Template Method
 - [Visitor](#visitor)
@@ -487,7 +487,50 @@ Optional: For convenience, a client may keep all extrinsic state in a separate
 [Entity Component Systems](https://en.wikipedia.org/wiki/Entity_component_system)
 are an interesting application of this pattern.
 
-## Behavioral
+### Behavioral
+
+## Memento
+
+Without violating encapsulation, capture and externalize an object's internal
+state so that the object can be restored to this state later.
+
+#### Why
+
+You want to implement an undo mechanism without making each object responsible
+for keeping a snapshot history itself and keep encapsulation intact.
+
+#### What
+
+An `Originator` provides a `createMemento` method that returns a `Memento`
+object as well as an `applyMemento(m: Memento)` method. The `Memento` object
+gets constructed by passing in some state private to the `Originator` and
+exposes a `getState` method that ideally only the `Originator` has access to
+(see below discussion on C++'s `friend` keyword).
+
+The client is responsible for calling the `createMemento` method before making a
+change to `Originator` and storing the `Memento` in a `Caretaker` object which
+holds a list of mementos representing state history.
+
+To perform an undo operation, the client calls `applyMemento` on the
+`Originator`, passing in a `Memento` object. `Originator` takes care of
+reverting its internal (private) state back to the values stored in the
+`Memento` object.
+
+#### Examples
+
+An editor providing undo/redo functionality.
+
+[Kotlin](kotlin/src/main/kotlin/Memento.kt)
+
+#### Discussion
+
+- Requires something like C++'s `friend` keyword to be properly implemented,
+  workarounds in other languages include Kotlin's `internal` or TypeScript's
+  `private` keywords.
+
+- Copying the full state of an object can become expensive quickly. Reduce the
+  footprint by saving only incremental changes (diffs) in the Memento while
+  guaranteeing the specific order of undo/redo operations.
 
 ### Visitor
 
